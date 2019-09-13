@@ -1,0 +1,20 @@
+
+login-azaccount
+# Create the Policy Definition (Subscription scope)
+$definition = New-AzPolicyDefinition -Name 'tegenforceall' -DisplayName 'Enforce tag and its value on resource groups' `
+ -description 'Enforces a required tag and its value on resources.' `
+ -Policy 'https://raw.githubusercontent.com/akshaykg/Vijnan/master/definition' `
+ -Parameter 'https://raw.githubusercontent.com/akshaykg/Vijnan/master/policyparm' `
+ -Mode All
+
+
+# Set the scope to a resource group; may also be a resource, subscription, or management group
+$Subscription = Get-AzSubscription
+# Set the Policy Parameter (JSON format)
+#$policyParam = '{ "Tag Name": { "value": "costCenter" }, "env": { "value": "headquarter" } }'
+
+# Create the Policy Assignment
+$assignment = New-AzPolicyAssignment -Name 'enforce-resourceGroup-tags-assignment' -PolicyDefinition $definition -Scope  "/subscriptions/$($Subscription[0].Id)" -PolicyParameter 'https://raw.githubusercontent.com/akshaykg/Vijnan/master/policyparm'
+
+
+
